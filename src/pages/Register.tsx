@@ -1,12 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import InputField from "../components/InputField";
+import { useAuth } from "../hooks/authContext";
 
 export default function Register() {
-  const [formData, setFormData] = useState({
-    userName: "",
-    password: "",
-    email: "",
-  });
+  const { user, setUser, register } = useAuth();
   const userNameRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     userNameRef.current?.focus();
@@ -14,20 +11,7 @@ export default function Register() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (
-      formData.userName === "" ||
-      formData.email === "" ||
-      formData.password === ""
-    ) {
-      alert("please Fill The Empty");
-    } else {
-      localStorage.setItem("userName", formData.userName);
-      localStorage.setItem("email", formData.email);
-      localStorage.setItem("password", formData.password);
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 500);
-    }
+    register();
   };
 
   return (
@@ -46,7 +30,7 @@ export default function Register() {
           id="userName"
           ref={userNameRef}
           onChange={(e) => {
-            setFormData({ ...formData, [e.target.id]: e.target.value });
+            setUser({ ...user, [e.target.id]: e.target.value });
           }}
         />
         <InputField
@@ -54,7 +38,7 @@ export default function Register() {
           placeholder="Email"
           id="email"
           onChange={(e) => {
-            setFormData({ ...formData, [e.target.id]: e.target.value });
+            setUser({ ...user, [e.target.id]: e.target.value });
           }}
         />
         <InputField
@@ -62,23 +46,16 @@ export default function Register() {
           placeholder="Password"
           id="password"
           onChange={(e) => {
-            setFormData({ ...formData, [e.target.id]: e.target.value });
+            setUser({ ...user, [e.target.id]: e.target.value });
           }}
         />
         <button
-          className="font-cursive m-auto w-[80%] bg-white hover:opacity-[50%]"
+          className="m-auto w-[80%] bg-white font-cursive hover:opacity-[50%]"
           type="submit"
         >
           Sign up
         </button>
-        {/* <input type="text" placeholder="Enter User Name" id="userName" /> */}
-        {/* <input type="email" placeholder="Enter User Email" id="email" /> */}
-        {/* <input
-          type="password"
-          placeholder="Enter User password"
-          id="password"
-        /> */}
-        {/* <input type="submit" value="Sign up" id="signUP" /> */}
+
         <div className="flex">
           Have Already Account?{" "}
           <a href="/login" className="text-light text-white">

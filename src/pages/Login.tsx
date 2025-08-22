@@ -1,39 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import InputField from "../components/InputField";
+import { useAuth } from "../hooks/authContext";
 
 export default function Login() {
-  const [formData, setFormData] = useState({
-    userName: "",
-    password: "",
-  });
+  const { user, setUser, login } = useAuth();
+
   const userNameRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     userNameRef.current?.focus();
   }, []);
-  const getUserName = localStorage.getItem("userName");
-  const getPassword = localStorage.getItem("password");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (formData.userName === "" || formData.password === "") {
-      alert("Fill Your Data");
-    } else {
-      if (
-        formData.userName &&
-        getUserName?.trim() === formData.userName.trim() &&
-        formData.password &&
-        getPassword?.trim() &&
-        formData.password.trim()
-      ) {
-        localStorage.setItem("userName", formData.userName);
-        localStorage.setItem("password", formData.password);
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 500);
-      } else {
-        alert("not valid");
-      }
-    }
+    login();
   };
 
   return (
@@ -52,7 +31,7 @@ export default function Login() {
           id="userName"
           ref={userNameRef}
           onChange={(e) => {
-            setFormData({ ...formData, [e.target.id]: e.target.value });
+            setUser({ ...user, [e.target.id]: e.target.value });
           }}
         />
 
@@ -61,23 +40,16 @@ export default function Login() {
           placeholder="Password"
           id="password"
           onChange={(e) => {
-            setFormData({ ...formData, [e.target.id]: e.target.value });
+            setUser({ ...user, [e.target.id]: e.target.value });
           }}
         />
         <button
-          className="font-cursive m-auto w-[80%] bg-white hover:opacity-[50%]"
+          className="m-auto w-[80%] bg-white font-cursive hover:opacity-[50%]"
           type="submit"
         >
           Sign in
         </button>
-        {/* <input type="text" placeholder="Enter User Name" id="userName" /> */}
-        {/* <input type="email" placeholder="Enter User Email" id="email" /> */}
-        {/* <input
-          type="password"
-          placeholder="Enter User password"
-          id="password"
-        /> */}
-        {/* <input type="submit" value="Sign up" id="signUP" /> */}
+
         <div className="flex">
           Have Already Account?{" "}
           <a href="/register" className="text-light text-white">

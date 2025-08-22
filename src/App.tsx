@@ -4,6 +4,7 @@ import NavBar from "./components/NavBar";
 import * as Pages from "./pages/_index";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
+import { AuthProvider } from "./hooks/authContext";
 
 export default function App() {
   const { i18n } = useTranslation();
@@ -30,19 +31,21 @@ export default function App() {
 
   return (
     <>
-      <NavBar />
+      <AuthProvider>
+        <NavBar />
 
-      <Routes>
-        <Route path="/" element={<Pages.Home />} />
-        <Route path="login" element={<Pages.Login />} />
-        <Route path="register" element={<Pages.Register />} />
-        <Route path="about" element={<Pages.About />} />
-        <Route path="contact" element={<Pages.Contact />} />
-        <Route path="policy" element={<Pages.Policy />} />
-        <Route path="*" element={<Pages.NotFound />} />
-      </Routes>
+        <Routes>
+          <Route path="/" element={<Pages.Home />} />
+          <Route path="login" element={<Pages.Login />} />
+          <Route path="register" element={<Pages.Register />} />
+          <Route path="about" element={<Pages.About />} />
+          <Route path="contact" element={<Pages.Contact />} />
+          <Route path="policy" element={<Pages.Policy />} />
+          <Route path="*" element={<Pages.NotFound />} />
+        </Routes>
 
-      <Footer />
+        <Footer />
+      </AuthProvider>
     </>
   );
 }

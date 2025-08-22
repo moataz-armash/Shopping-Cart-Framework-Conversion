@@ -4,26 +4,39 @@
  */
 import NavBarLink from "./NavBarLink";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import logo from "../assets/images/14603825_5484736.jpg";
+import { useAuth } from "../hooks/authContext";
 
 export default function NavBar() {
-  const { t } = useTranslation();
+  const { isAuthenticated, logout } = useAuth();
   const [state, setState] = useState(false);
 
-  const navigation = [
+  const navigationRegister = [
     { label: "Sign In", path: "/login" },
     {
       label: "Sign up",
       path: "/register",
     },
   ];
+  const navigationLogout = [
+    { icon: "fluent:cart-24-regular", path: "/cart" },
+    {
+      label: "Logout",
+      path: "/register",
+    },
+  ];
+
+  const userName = localStorage.getItem("userName");
 
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 bg-tahiti shadow-lg backdrop-blur-md">
       <div className="page container">
-        <div className="items-center md:flex">
-          <div className="flex items-center justify-between py-1 md:block md:py-3 ">
+        <div
+          className={`${isAuthenticated ? "flex justify-between" : ""} items-center md:flex`}
+        >
+          <div
+            className={`${isAuthenticated ? "w-full" : ""}flex items-center justify-between py-1 md:block md:py-3`}
+          >
             <a href="/">
               <img src={logo} width={100} height={40} alt="Float UI logo" />
             </a>
@@ -64,23 +77,49 @@ export default function NavBar() {
               </button>
             </div>
           </div>
+          {isAuthenticated && (
+            <p className="hidden w-full text-center text-white md:block">
+              Welcome {userName}
+            </p>
+          )}
           <div
             className={`mt-0 flex-1 justify-self-center pb-3 md:block md:pb-0  ${
               state ? "block" : "hidden"
             } `}
           >
             <ul className="flex flex-col justify-end space-y-0 pr-0 md:flex md:flex-row">
-              {navigation.map((item, idx) => {
-                return (
-                  <li
-                    key={idx}
-                    className="ml-0 md:ml-4"
-                    onClick={() => setState(false)}
-                  >
-                    <NavBarLink to={item.path} label={item.label} />
-                  </li>
-                );
-              })}
+              {!isAuthenticated &&
+                navigationRegister.map((item, idx) => {
+                  return (
+                    <li
+                      key={idx}
+                      className="ml-0 md:ml-4"
+                      onClick={() => setState(false)}
+                    >
+                      <NavBarLink to={item.path} label={item.label} />
+                    </li>
+                  );
+                })}
+
+              {isAuthenticated &&
+                navigationLogout.map((item, idx) => {
+                  return (
+                    <li
+                      key={idx}
+                      className="ml-0 md:ml-4"
+                      onClick={() => {
+                        item.label === "Logout" && logout();
+                        setState(false);
+                      }}
+                    >
+                      <NavBarLink
+                        to={item.path}
+                        label={item.label}
+                        icon={item.icon}
+                      />
+                    </li>
+                  );
+                })}
             </ul>
           </div>
         </div>
