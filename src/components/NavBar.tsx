@@ -2,126 +2,155 @@
  * https://floatui.com/components/navbars
  * https://icon-sets.iconify.design/
  */
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Icon } from "@iconify/react";
 import NavBarLink from "./NavBarLink";
-import { useState } from "react";
 import logo from "../assets/images/14603825_5484736.jpg";
 import { useAuth } from "../hooks/authContext";
 
 export default function NavBar() {
-  const { isAuthenticated, logout } = useAuth();
-  const [state, setState] = useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const userName = localStorage.getItem("userName") || user?.userName;
 
   const navigationRegister = [
     { label: "Sign In", path: "/login" },
-    {
-      label: "Sign up",
-      path: "/register",
-    },
-  ];
-  const navigationLogout = [
-    { icon: "fluent:cart-24-regular", path: "/cart" },
-    {
-      label: "Logout",
-      path: "/register",
-    },
+    { label: "Sign up", path: "/register" },
   ];
 
-  const userName = localStorage.getItem("userName");
+  const navigationAuthed = [
+    { icon: "fluent:cart-24-regular", path: "/cart" }, // icon only
+    { label: "Logout", path: "#" }, // text only, triggers logout
+  ];
+
+  // Close mobile menu on route change
+  useEffect(() => setOpen(false), [location.pathname]);
+
+  // Optional: prevent body scroll when menu is open (mobile)
+  useEffect(() => {
+    if (open) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const handleItemClick = (item: { label?: string; path: string }) => {
+    if (item.label === "Logout") {
+      logout();
+      return; // don't navigate
+    }
+  };
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 bg-tahiti shadow-lg backdrop-blur-md">
-      <div className="page container">
-        <div
-          className={`${isAuthenticated ? "flex justify-between" : ""} items-center md:flex`}
-        >
-          <div
-            className={`${isAuthenticated ? "w-full" : ""}flex items-center justify-between py-1 md:block md:py-3`}
-          >
-            <a href="/">
-              <img src={logo} width={100} height={40} alt="Float UI logo" />
-            </a>
-            <div className="md:hidden">
-              <button
-                className="rounded-md p-2 text-gray-700 outline-none focus:border focus:border-gray-400"
-                onClick={() => setState(!state)}
-              >
-                {state ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 8h16M4 16h16"
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
-          </div>
-          {isAuthenticated && (
-            <p className="hidden w-full text-center text-white md:block">
-              Welcome {userName}
-            </p>
-          )}
-          <div
-            className={`mt-0 flex-1 justify-self-center pb-3 md:block md:pb-0  ${
-              state ? "block" : "hidden"
-            } `}
-          >
-            <ul className="flex flex-col justify-end space-y-0 pr-0 md:flex md:flex-row">
-              {!isAuthenticated &&
-                navigationRegister.map((item, idx) => {
-                  return (
-                    <li
-                      key={idx}
-                      className="ml-0 md:ml-4"
-                      onClick={() => setState(false)}
-                    >
-                      <NavBarLink to={item.path} label={item.label} />
-                    </li>
-                  );
-                })}
+    <nav className="fixed inset-x-0 top-0 z-50 bg-tahiti text-white shadow-lg backdrop-blur-md">
+      <div className="page">
+        <div className="flex items-center justify-between py-2">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2">
+            <img src={logo} width={100} height={40} alt="Logo" />
+          </Link>
 
-              {isAuthenticated &&
-                navigationLogout.map((item, idx) => {
-                  return (
-                    <li
-                      key={idx}
-                      className="ml-0 md:ml-4"
-                      onClick={() => {
-                        item.label === "Logout" && logout();
-                        setState(false);
-                      }}
+          {/* Greeting (desktop) */}
+          {isAuthenticated && (
+            <p className="hidden text-white/90 md:block">Welcome {userName}</p>
+          )}
+
+          {/* Right side (desktop) */}
+          <div className="hidden md:flex md:items-center md:gap-2">
+            <ul className="flex items-center gap-2">
+              {!isAuthenticated &&
+                navigationRegister.map((item) => (
+                  <li key={item.path}>
+                    <NavBarLink to={item.path} label={item.label} />
+                  </li>
+                ))}
+
+              {isAuthenticated && (
+                <>
+                  {/* Cart (icon only) */}
+                  <li>
+                    <NavBarLink to="/cart" icon="fluent:cart-24-regular" />
+                  </li>
+                  {/* Logout (button) */}
+                  <li>
+                    <button
+                      onClick={() =>
+                        handleItemClick({ label: "Logout", path: "#" })
+                      }
+                      className="inline-flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-white/10"
                     >
-                      <NavBarLink
-                        to={item.path}
-                        label={item.label}
-                        icon={item.icon}
-                      />
-                    </li>
-                  );
-                })}
+                      <Icon icon="lucide:log-out" width="20" height="20" />
+                      Logout
+                    </button>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
+
+          {/* Hamburger (mobile) */}
+          <button
+            className="rounded-md p-2 text-white/90 outline-none focus:ring md:hidden"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle menu"
+            aria-expanded={open}
+          >
+            {open ? (
+              <Icon icon="lucide:x" width="24" height="24" />
+            ) : (
+              <Icon icon="lucide:menu" width="24" height="24" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      <div
+        className={`
+          overflow-hidden bg-tahiti/95 backdrop-blur transition-[max-height,opacity]
+          duration-300 ease-out md:hidden
+          ${open ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"}
+        `}
+      >
+        <div className="page pb-4">
+          {/* {isAuthenticated && (
+            <p className="mb-3 text-center text-white/90">Welcome {userName}</p>
+          )} */}
+
+          <ul className="flex flex-col items-center gap-1">
+            {!isAuthenticated &&
+              navigationRegister.map((item) => (
+                <li key={item.path} onClick={() => setOpen(false)}>
+                  <NavBarLink to={item.path} label={item.label} />
+                </li>
+              ))}
+
+            {isAuthenticated && (
+              <>
+                {/* Cart (icon only) */}
+                <li onClick={() => setOpen(false)}>
+                  <NavBarLink to="/cart" icon="fluent:cart-24-regular" />
+                </li>
+
+                {/* Logout (button) */}
+                <li>
+                  <button
+                    onClick={() => {
+                      handleItemClick({ label: "Logout", path: "#" });
+                      setOpen(false);
+                    }}
+                    className="inline-flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left hover:bg-white/10"
+                  >
+                    <Icon icon="lucide:log-out" width="20" height="20" />
+                    Logout
+                  </button>
+                </li>
+              </>
+            )}
+          </ul>
         </div>
       </div>
     </nav>
