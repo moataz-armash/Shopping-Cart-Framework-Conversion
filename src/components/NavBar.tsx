@@ -5,42 +5,27 @@
 import NavBarLink from "./NavBarLink";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import logo from "../assets/images/14603825_5484736.jpg";
 
 export default function NavBar() {
   const { t } = useTranslation();
   const [state, setState] = useState(false);
 
   const navigation = [
-    { label: t("nav.home"), path: "/", icon: "fluent:home-12-regular" },
+    { label: "Sign In", path: "/login" },
     {
-      label: t("nav.prices"),
-      path: "/pricing",
-      icon: "fluent:money-24-regular",
-    },
-    {
-      label: t("nav.contact"),
-      path: "/contact",
-      icon: "fluent:contact-card-ribbon-16-regular",
-    },
-    {
-      label: t("nav.about"),
-      path: "/about",
-      icon: "fluent:people-team-20-regular",
+      label: "Sign up",
+      path: "/register",
     },
   ];
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 bg-white/90 shadow-lg backdrop-blur-md">
+    <nav className="fixed left-0 right-0 top-0 z-50 bg-tahiti shadow-lg backdrop-blur-md">
       <div className="page container">
         <div className="items-center md:flex">
           <div className="flex items-center justify-between py-1 md:block md:py-3 ">
             <a href="/">
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWa-gW4n2m_1rLpvlkE_1SzBSEHFj8LoP9Qw&usqp=CAU"
-                width={100}
-                height={40}
-                alt="Float UI logo"
-              />
+              <img src={logo} width={100} height={40} alt="Float UI logo" />
             </a>
             <div className="md:hidden">
               <button
@@ -92,11 +77,7 @@ export default function NavBar() {
                     className="ml-0 md:ml-4"
                     onClick={() => setState(false)}
                   >
-                    <NavBarLink
-                      to={item.path}
-                      icon={item.icon}
-                      label={item.label}
-                    />
+                    <NavBarLink to={item.path} label={item.label} />
                   </li>
                 );
               })}
