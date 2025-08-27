@@ -45,6 +45,8 @@ module.exports = {
         light: "#67e8f9",
         DEFAULT: "#007BFF",
         dark: "#0e7490",
+        cardBorder: "#17a2b8",
+        favoriteIcon: "#5bc0de",
       },
     },
     extend: {

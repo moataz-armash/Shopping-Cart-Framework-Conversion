@@ -65,6 +65,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("userName");
     localStorage.removeItem("email");
     localStorage.removeItem("password");
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 500);
   };
 
   return (

@@ -46,7 +46,7 @@ export default function NavBar() {
 
   return (
     <nav className="fixed inset-x-0 top-0 z-50 bg-tahiti text-white shadow-lg backdrop-blur-md">
-      <div className="page">
+      <div className="page max-w-5xl">
         <div className="flex items-center justify-between py-2">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">

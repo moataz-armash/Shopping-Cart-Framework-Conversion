@@ -1,195 +1,265 @@
-import { Helmet } from 'react-helmet-async';
-import { useTranslation } from 'react-i18next';
-import { Icon } from '@iconify/react';
+import { Helmet } from "react-helmet-async";
+import { useTranslation } from "react-i18next";
+import { Icon } from "@iconify/react";
+import { useState, useCallback, useMemo } from "react";
+import { useCart } from "../hooks/cartContext";
 
 export default function Home() {
-	const { t } = useTranslation();
+  const { t } = useTranslation();
+  const { cart } = useCart();
+  const [searchOption, setSearchOption] = useState("title");
+  const [searchValue, setSearchValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-	const features = [
-		{
-			icon: 'devicon:react',
-			title: 'React',
-			desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue, nisl eget molestie varius.',
-		},
-		{
-			icon: 'devicon:reactrouter',
-			title: 'React Router',
-			desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue, nisl eget molestie varius.',
-		},
-		{
-			icon: 'simple-icons:i18next',
-			title: 'React i18n',
-			desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue, nisl eget molestie varius.',
-		},
-		{
-			icon: 'icon-park:helmet',
-			title: 'Recat Helmet Async',
-			desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue, nisl eget molestie varius.',
-		},
-		{
-			icon: 'devicon:tailwindcss',
-			title: 'Tailwind',
-			desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue, nisl eget molestie varius.',
-		},
-		{
-			icon: 'bi:ui-radios',
-			title: 'FloatUI',
-			desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue, nisl eget molestie varius.',
-		},
-		{
-			icon: 'devicon:vitejs',
-			title: 'Vite',
-			desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue, nisl eget molestie varius.',
-		},
-		{
-			icon: 'devicon-plain:axios',
-			title: 'Axios',
-			desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue, nisl eget molestie varius.',
-		},
-		{
-			icon: 'simple-icons:iconify',
-			title: 'Iconify',
-			desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue, nisl eget molestie varius.',
-		},
-	];
+  // Memoized search options for better performance
+  const searchOptions = useMemo(
+    () => [
+      { value: "title", label: "Search By Title" },
+      { value: "category", label: "Search By Category" },
+    ],
+    [],
+  );
 
-	return (
-		<>
-			<Helmet>
-				<title>{t('home.seo.title')}</title>
-				<meta
-					name='description'
-					content="{t('home.seo.description')}"
-				></meta>
-				<meta
-					name='keywords'
-					content="{t('home.seo.keywords')}"
-				></meta>
-			</Helmet>
-			<div className='container page content'>
-				<section>
-					<div className='py-28 gap-12 overflow-hidden md:flex'>
-						<div className='flex-1 space-y-5'>
-							<a
-								href='javascript:void(0)'
-								className='inline-flex gap-x-6 items-center rounded-full p-1 pr-6 border text-sm font-medium duration-150 hover:bg-white'
-							>
-								<span className='inline-block rounded-full px-3 py-1 bg-tahiti text-white'>
-									News
-								</span>
-								<p className='flex items-center'>
-									Read the launch post from here
-									<svg
-										xmlns='http://www.w3.org/2000/svg'
-										viewBox='0 0 20 20'
-										fill='currentColor'
-										className='w-5 h-5'
-									>
-										<path
-											fillRule='evenodd'
-											d='M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z'
-											clipRule='evenodd'
-										/>
-									</svg>
-								</p>
-							</a>
-							<h1 className='mb-4 text-4xl font-light leading-none tracking-tight text-gray-500 md:text-5xl lg:text-6xl'>
-								Build your SaaS exactly how you want
-							</h1>
-							<p>
-								Sed ut perspiciatis unde omnis iste natus voluptatem accusantium doloremque
-								laudantium, totam rem aperiam, eaque ipsa quae.
-							</p>
-							<div className='flex items-center gap-x-3 sm:text-sm'>
-								<a
-									href='javascript:void(0)'
-									className='flex items-center justify-center gap-x-1 py-2 px-4 text-white font-medium bg-gray-800 duration-150 hover:bg-gray-700 active:bg-gray-900 rounded-full md:inline-flex'
-								>
-									Get started
-									<svg
-										xmlns='http://www.w3.org/2000/svg'
-										viewBox='0 0 20 20'
-										fill='currentColor'
-										className='w-5 h-5'
-									>
-										<path
-											fillRule='evenodd'
-											d='M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z'
-											clipRule='evenodd'
-										/>
-									</svg>
-								</a>
-								<a
-									href='javascript:void(0)'
-									className='flex items-center justify-center gap-x-1 py-2 px-4 text-gray-700 hover:text-gray-900 font-medium duration-150 md:inline-flex'
-								>
-									Contact sales
-									<svg
-										xmlns='http://www.w3.org/2000/svg'
-										viewBox='0 0 20 20'
-										fill='currentColor'
-										className='w-5 h-5'
-									>
-										<path
-											fillRule='evenodd'
-											d='M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z'
-											clipRule='evenodd'
-										/>
-									</svg>
-								</a>
-							</div>
-						</div>
-						<div className='flex-1 hidden lg:block'>
-							<img
-								src='https://picsum.photos/id/4/800/400'
-								className='max-w-2xl'
-							/>
-						</div>
-					</div>
-				</section>
+  // Get current placeholder text
+  const placeholderText = useMemo(() => {
+    const option = searchOptions.find((opt) => opt.value === searchOption);
+    return option?.label || "Search...";
+  }, [searchOption, searchOptions]);
 
-				<section className='py-10'>
-					<div className=' text-gray-600 '>
-						<div className='relative max-w-2xl mx-auto sm:text-center'>
-							<div className='relative z-10'>
-								<h3 className='text-gray-800 text-3xl font-light sm:text-4xl'>What's inside?</h3>
-								<p className='mt-3'>
-									Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue, nisl eget
-									molestie varius, enim ex faucibus purus.
-								</p>
-							</div>
-							<div
-								className='absolute inset-0 max-w-xs mx-auto h-44 blur-[118px]'
-								style={{
-									background:
-										'linear-gradient(152.92deg, rgba(192, 132, 252, 0.2) 4.54%, rgba(232, 121, 249, 0.26) 34.2%, rgba(192, 132, 252, 0.1) 77.55%)',
-								}}
-							></div>
-						</div>
-						<div className='relative mt-12'>
-							<ul className='grid gap-8 sm:grid-cols-2 lg:grid-cols-3'>
-								{features.map((item, idx) => (
-									<li
-										key={idx}
-										className='bg-white space-y-3 p-4 border rounded-lg'
-									>
-										<div className='text-center'>
-											<Icon
-												icon={item.icon}
-												height={32}
-												inline={true}
-												className='inline-block'
-											/>
-										</div>
-										<h4 className='text-lg text-gray-800 font-semibold'>{item.title}</h4>
-										<p>{item.desc}</p>
-									</li>
-								))}
-							</ul>
-						</div>
-					</div>
-				</section>
-			</div>
-		</>
-	);
+  // Debounced search function
+  const searchData = useCallback(
+    async (value) => {
+      if (!value.trim()) return;
+
+      setIsLoading(true);
+      try {
+        // Simulate API call - replace with your actual search logic
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        console.log(`Searching for: "${value}" using option: ${searchOption}`);
+
+        // Your search implementation here
+        // e.g., await searchAPI(value, searchOption);
+      } catch (error) {
+        console.error("Search error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [searchOption],
+  );
+
+  const handleSearchChange = useCallback(
+    (e) => {
+      const value = e.target.value;
+      setSearchValue(value);
+      searchData(value);
+    },
+    [searchData],
+  );
+
+  const handleSearchOptionChange = useCallback(
+    (e) => {
+      setSearchOption(e.target.value);
+      // Re-trigger search if there's existing search value
+      if (searchValue.trim()) {
+        searchData(searchValue);
+      }
+    },
+    [searchValue, searchData],
+  );
+
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        searchData(searchValue);
+      }
+    },
+    [searchValue, searchData],
+  );
+
+  return (
+    <>
+      <Helmet>
+        <title>{t("homeTitle", "Home")}</title>
+        <meta
+          name="description"
+          content={t("homeDescription", "Search and discover content")}
+        />
+      </Helmet>
+
+      <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="container mx-auto mt-20 px-4 py-8">
+          {/* Search Section */}
+          <div className="mx-auto max-w-5xl">
+            {/* border border-gray-200 shadow-lg */}
+            <div className="rounded-xl  bg-white p-2 ">
+              <div className="flex flex-col gap-4 sm:flex-row">
+                {/* Search Option Selector */}
+                <div className="sm:w-1/3">
+                  <label
+                    htmlFor="searchOption"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                  >
+                    Search Type
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="searchOption"
+                      className="w-full cursor-pointer appearance-none rounded-lg border border-gray-300 bg-white py-3 pl-3 pr-10 text-gray-700 shadow-sm transition-colors duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={searchOption}
+                      onChange={handleSearchOptionChange}
+                      aria-label={t("selectSearchType", "Select search type")}
+                    >
+                      {searchOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    <Icon
+                      icon="mdi:chevron-down"
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-400"
+                      width={20}
+                    />
+                  </div>
+                </div>
+
+                {/* Search Input */}
+                <div className="sm:w-2/3">
+                  <label
+                    htmlFor="searchInput"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                  >
+                    {t("searchQuery", "Search Query")}
+                  </label>
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                      <Icon
+                        icon={isLoading ? "mdi:loading" : "mdi:magnify"}
+                        className={`text-gray-400 ${isLoading ? "animate-spin" : ""}`}
+                        width={20}
+                      />
+                    </div>
+                    <input
+                      id="searchInput"
+                      type="text"
+                      value={searchValue}
+                      onChange={handleSearchChange}
+                      onKeyDown={handleKeyDown}
+                      className="w-full rounded-lg border border-gray-300 bg-white py-3 pl-10 pr-4 placeholder-gray-400 shadow-sm transition-colors duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder={placeholderText}
+                      disabled={isLoading}
+                      aria-label={placeholderText}
+                      aria-describedby="search-help"
+                    />
+                    {searchValue && (
+                      <button
+                        onClick={() => {
+                          setSearchValue("");
+                          document.getElementById("searchInput")?.focus();
+                        }}
+                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 transition-colors hover:text-gray-600"
+                        aria-label={t("clearSearch", "Clear search")}
+                      >
+                        <Icon icon="mdi:close" width={20} />
+                      </button>
+                    )}
+                  </div>
+                  <p id="search-help" className="mt-1 text-sm text-gray-500">
+                    {t(
+                      "searchHint",
+                      "Press Enter to search or type to search automatically",
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              {/* Search Stats/Status */}
+              {searchValue && (
+                <div className="mt-4 border-t border-gray-200 pt-4">
+                  <div className="flex items-center justify-between text-sm text-gray-600">
+                    <span>
+                      {isLoading
+                        ? t("searching", "Searching...")
+                        : t(
+                            "searchingFor",
+                            `Searching for "${searchValue}" in ${searchOptions.find((opt) => opt.value === searchOption)?.label.toLowerCase()}`,
+                          )}
+                    </span>
+                    {!isLoading && (
+                      <span className="font-medium text-blue-600">
+                        {t("resultsFound", "Results will appear here")}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Results Section Placeholder */}
+          <div className="mx-auto mt-8 grid max-w-5xl grid-cols-3 gap-x-12 gap-y-8">
+            {cart.map((item) => (
+              <div
+                className=" border-tahiti-cardBorder mb-4 flex flex-col break-words rounded-sm border px-8 py-4 duration-300 ease-in hover:scale-110"
+                key={item.id}
+              >
+                <img
+                  src={item.imageURL}
+                  alt={item.title}
+                  className="rounded-tl-[calc(.25rem - 1px)] rounded-tr-[calc(.25rem - 1px)] m-auto
+    mb-2 h-48 w-[80%] rounded-lg p-1"
+                />
+                <p className="mb-2">
+                  <span className="font-semibold">Product:</span> {item.title}
+                </p>
+                <p className="mb-2">
+                  <span className="font-semibold">Category:</span>{" "}
+                  {item.category}
+                </p>
+                <p className="mb-2">
+                  <span className="font-semibold">Color:</span> {item.color}
+                </p>
+
+                <p className="mb-2">
+                  <span className="font-semibold">Price: </span>
+                  <span className="line-through">{item.salePrice} EGP</span>
+                  <span> &ensp;{item.price} EGP</span>
+                </p>
+                <div className="mt-2 flex items-center justify-between">
+                  <button className="rounded-md bg-tahiti px-2 py-1 font-bold text-white hover:bg-tahiti-dark">
+                    Add To Cart
+                  </button>
+                  <Icon
+                    icon="mdi:favorite-border"
+                    width="30"
+                    height="30"
+                    className="text-tahiti-favoriteIcon cursor-pointer"
+                  />
+                </div>
+              </div>
+            ))}
+
+            {/* <div className="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-lg">
+              <Icon
+                icon="mdi:file-search-outline"
+                width={48}
+                className="mx-auto mb-4 text-gray-400"
+              />
+              <h3 className="mb-2 text-lg font-medium text-gray-700">
+                {t("noResults", "Start searching to see results")}
+              </h3>
+              <p className="text-gray-500">
+                {t(
+                  "searchInstructions",
+                  "Enter your search term above and select your preferred search method",
+                )}
+              </p>
+            </div> */}
+          </div>
+        </div>
+      </main>
+    </>
+  );
 }
