@@ -6,7 +6,7 @@ import { useCart } from "../hooks/cartContext";
 
 export default function Home() {
   const { t } = useTranslation();
-  const { cart } = useCart();
+  const { products } = useCart();
   const [searchOption, setSearchOption] = useState("title");
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -200,7 +200,7 @@ export default function Home() {
 
           {/* Results Section Placeholder */}
           <div className="mx-auto mt-8 grid max-w-5xl grid-cols-3 gap-x-12 gap-y-8">
-            {cart.map((item) => (
+            {products?.map((item) => (
               <div
                 className=" border-tahiti-cardBorder mb-4 flex flex-col break-words rounded-sm border px-8 py-4 duration-300 ease-in hover:scale-110"
                 key={item.id}

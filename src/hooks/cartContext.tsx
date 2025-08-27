@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import { products } from "../data/products";
+import { dummyProducts } from "../data/products";
 
-interface CartItem {
+interface Product {
   id: number;
   title: string;
   category: string;
@@ -12,9 +12,14 @@ interface CartItem {
   imageURL: string;
 }
 
+interface CartItem extends Product {
+  quantity: number;
+}
+
 interface CartContextType {
   cart: CartItem[];
-  // addToCart: (item: CartItem) => void;
+  products?: Product[];
+  addToCart: (item: CartItem) => void;
   // removeFromCart: (id: string) => void;
   // addToFavorites: (item: CartItem) => void;
   // clearCart: () => void;
@@ -23,12 +28,17 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cart, setCart] = useState<CartItem[]>(products);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [products, setProducts] = useState<Product[]>(dummyProducts);
+
+  const addToCart = (item: CartItem) => {
+    setCart((prevCart) => [...prevCart, item]);
+  };
 
   return (
     <CartContext.Provider
       // addToCart, removeFromCart, addToFavorites, clearCart
-      value={{ cart }}
+      value={{ cart, products, addToCart }}
     >
       {children}
     </CartContext.Provider>

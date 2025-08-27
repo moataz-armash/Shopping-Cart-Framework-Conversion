@@ -18,7 +18,7 @@ import phone5 from "../assets/images/phone5.jpg";
 import phone6 from "../assets/images/phone6.jpg";
 import phone7 from "../assets/images/phone7.jpg";
 
-export let products = [
+export let dummyProducts = [
   {
     id: 1,
     title: "Dell G15-5520",
