@@ -6,7 +6,7 @@ import { useCart } from "../hooks/cartContext";
 
 export default function Home() {
   const { t } = useTranslation();
-  const { products } = useCart();
+  const { products, addToCart, cart } = useCart();
   const [searchOption, setSearchOption] = useState("title");
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -77,6 +77,10 @@ export default function Home() {
     },
     [searchValue, searchData],
   );
+
+  function isInCart(productId: number) {
+    return cart.some((item) => item.id === productId);
+  }
 
   return (
     <>
@@ -208,8 +212,7 @@ export default function Home() {
                 <img
                   src={item.imageURL}
                   alt={item.title}
-                  className="rounded-tl-[calc(.25rem - 1px)] rounded-tr-[calc(.25rem - 1px)] m-auto
-    mb-2 h-48 w-[80%] rounded-lg p-1"
+                  className="rounded-tl-[calc(.25rem - 1px)] rounded-tr-[calc(.25rem - 1px)] m-auto mb-2 h-48 w-[80%] rounded-lg p-1"
                 />
                 <p className="mb-2">
                   <span className="font-semibold">Product:</span> {item.title}
@@ -228,8 +231,13 @@ export default function Home() {
                   <span> &ensp;{item.price} EGP</span>
                 </p>
                 <div className="mt-2 flex items-center justify-between">
-                  <button className="rounded-md bg-tahiti px-2 py-1 font-bold text-white hover:bg-tahiti-dark">
-                    Add To Cart
+                  <button
+                    className="rounded-md bg-tahiti px-2 py-1 font-bold text-white hover:bg-tahiti-dark"
+                    onClick={() => {
+                      addToCart(item);
+                    }}
+                  >
+                    {isInCart(item.id) ? "Remove From Cart" : "Add To Cart"}
                   </button>
                   <Icon
                     icon="mdi:favorite-border"
