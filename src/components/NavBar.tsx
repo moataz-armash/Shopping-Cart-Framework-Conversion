@@ -13,7 +13,7 @@ import { useCart } from "../hooks/cartContext";
 
 export default function NavBar() {
   const { isAuthenticated, user, logout } = useAuth();
-  const { cart, increaseQuantity, decreaseQuantity, total } = useCart();
+  const { cart, increaseQuantity, decreaseQuantity, total, length } = useCart();
   const [open, setOpen] = useState(false);
   const [openCart, setOpenCart] = useState(false);
   const location = useLocation();
@@ -53,8 +53,9 @@ export default function NavBar() {
     }
   };
 
-  const isProductsPage = pathName === "/products";
+  console.log(length && +length > 0);
 
+  const isProductsPage = pathName === "/products";
   return (
     <nav className="fixed inset-x-0 top-0 z-50 bg-tahiti text-white shadow-lg backdrop-blur-md">
       <div className="page max-w-5xl">
@@ -86,9 +87,19 @@ export default function NavBar() {
               {isAuthenticated && (
                 <>
                   {/* Cart (icon only) */}
-                  <li>
+                  <li className="relative">
+                    {length > 0 && (
+                      <span
+                        className="pointer-events-none absolute -right-1 -top-1 z-10 flex
+        h-4 w-4 items-center justify-center rounded-full
+        bg-red-500 p-2 text-xs font-bold text-white
+        shadow"
+                      >
+                        {length}
+                      </span>
+                    )}
                     <Icon
-                      className="cursor-pointer"
+                      className="relative cursor-pointer"
                       icon="fluent:cart-24-regular"
                       width="30"
                       height="30"
@@ -209,7 +220,18 @@ export default function NavBar() {
             {isAuthenticated && (
               <>
                 {/* Cart (icon only) */}
-                <li onClick={() => setOpen(false)}>
+                <li onClick={() => setOpen(false)} className="relative">
+                  {length && (
+                    <span
+                      className="h-92 w-92 pointer-events-none absolute -right-1
+        -top-1 z-10 flex items-center justify-center
+        rounded-full bg-red-500 text-xs font-bold text-white
+        shadow"
+                    >
+                      {length}
+                    </span>
+                  )}
+
                   <NavBarLink to="/products" icon="fluent:cart-24-regular" />
                 </li>
 

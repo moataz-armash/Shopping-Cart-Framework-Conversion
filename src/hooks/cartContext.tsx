@@ -10,6 +10,7 @@ interface Product {
   Gold?: string;
   salePrice: string;
   imageURL: string;
+  isFavorite?: boolean;
 }
 
 interface CartItem extends Product {
@@ -23,7 +24,9 @@ interface CartContextType {
   removeFromCart: (id: number) => void;
   increaseQuantity?: (id: number) => void;
   decreaseQuantity?: (id: number) => void;
+  toggleFavorite?: (id: number) => void;
   total?: number;
+  length?: number;
   // removeFromCart: (id: string) => void;
   // addToFavorites: (item: CartItem) => void;
   // clearCart: () => void;
@@ -71,10 +74,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const toggleFavorite = (id: number) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === id
+          ? { ...product, isFavorite: !product.isFavorite }
+          : product,
+      ),
+    );
+  };
+
   const total = cart.reduce(
     (acc, item) => acc + +item.price * item.quantity,
     0,
   );
+
+  const length = cart?.reduce((acc, item) => acc + item.quantity, 0) ?? 0;
 
   return (
     <CartContext.Provider
@@ -87,6 +102,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         decreaseQuantity,
         total,
         removeFromCart,
+        toggleFavorite,
+        length,
       }}
     >
       {children}

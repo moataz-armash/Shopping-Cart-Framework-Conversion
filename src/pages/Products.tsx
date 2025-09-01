@@ -11,7 +11,7 @@ export default function Products() {
   } = useCart();
   return (
     <>
-      <div className="mx-auto mt-40 grid max-w-5xl grid-cols-2 gap-x-12 gap-y-8">
+      <div className="mx-auto mt-40 grid max-w-5xl grid-cols-1 gap-x-12 gap-y-8 p-16 md:grid-cols-2 md:p-2">
         {cart?.map((item) => (
           <div
             className=" mb-4 flex break-words rounded-sm border border-tahiti-cardBorder px-8 py-4 duration-300 ease-in hover:scale-110"
@@ -38,45 +38,31 @@ export default function Products() {
                 <span className="line-through">{item.salePrice} EGP</span>
                 <span> &ensp;{item.price} EGP</span>
               </p>
-              <div className="mt-2 flex items-center justify-between">
-                {cart.map((item) => (
-                  <div className="m-auto mb-3 flex w-[90%] items-center justify-between rounded-md bg-white p-2 shadow">
-                    <span className="text-sm font-bold text-tahiti">
-                      {item.title}
-                    </span>
-                    <span className="text-xs font-bold text-tahiti">
-                      {item.quantity}
-                    </span>
-
-                    <div className="flex items-center space-x-4">
-                      <button
-                        onClick={() =>
-                          decreaseQuantity && decreaseQuantity(item.id)
-                        }
-                        className="text-md font-bold text-red-500 hover:opacity-70"
-                      >
-                        -
-                      </button>
-                      <button
-                        onClick={() =>
-                          increaseQuantity && increaseQuantity(item.id)
-                        }
-                        className="text-md font-bold text-green-600 hover:opacity-70"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                ))}
+              <div className="mb-2 flex items-center justify-center space-x-4">
                 <button
-                  className="rounded-md bg-tahiti px-2 py-1 font-bold text-white hover:bg-tahiti-dark"
-                  onClick={() => {
-                    removeFromCart(item.id);
-                  }}
+                  onClick={() => decreaseQuantity && decreaseQuantity(item.id)}
+                  className="text-xl font-bold text-red-500 hover:opacity-70"
                 >
-                  Remove From Cart
+                  -
                 </button>
+                <button
+                  onClick={() => increaseQuantity && increaseQuantity(item.id)}
+                  className="text-xl font-bold text-green-600 hover:opacity-70"
+                >
+                  +
+                </button>
+                <span className="text-md font-bold text-tahiti">
+                  {item.quantity}
+                </span>
               </div>
+              <button
+                className="rounded-md bg-tahiti px-2 py-1 text-sm font-bold text-white hover:bg-tahiti-dark"
+                onClick={() => {
+                  removeFromCart(item.id);
+                }}
+              >
+                Remove From Cart
+              </button>
               {/* <Icon
                 icon="mdi:favorite-border"
                 width="30"

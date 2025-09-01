@@ -6,7 +6,8 @@ import { useCart } from "../hooks/cartContext";
 
 export default function Home() {
   const { t } = useTranslation();
-  const { products, addToCart, cart } = useCart();
+  const { products, addToCart, cart, toggleFavorite, removeFromCart } =
+    useCart();
   const [searchOption, setSearchOption] = useState("title");
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -203,10 +204,10 @@ export default function Home() {
           </div>
 
           {/* Results Section Placeholder */}
-          <div className="mx-auto mt-8 grid max-w-5xl grid-cols-3 gap-x-12 gap-y-8">
+          <div className="mx-auto mt-8 grid max-w-5xl grid-cols-1 gap-x-12 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
             {products?.map((item) => (
               <div
-                className=" border-tahiti-cardBorder mb-4 flex flex-col break-words rounded-sm border px-8 py-4 duration-300 ease-in hover:scale-110"
+                className=" mb-4 flex flex-col break-words rounded-sm border border-tahiti-cardBorder px-8 py-4 duration-300 ease-in hover:scale-110"
                 key={item.id}
               >
                 <img
@@ -234,17 +235,30 @@ export default function Home() {
                   <button
                     className="rounded-md bg-tahiti px-2 py-1 font-bold text-white hover:bg-tahiti-dark"
                     onClick={() => {
-                      addToCart(item);
+                      isInCart(item.id)
+                        ? removeFromCart(item.id)
+                        : addToCart(item);
                     }}
                   >
                     {isInCart(item.id) ? "Remove From Cart" : "Add To Cart"}
                   </button>
-                  <Icon
-                    icon="mdi:favorite-border"
-                    width="30"
-                    height="30"
-                    className="text-tahiti-favoriteIcon cursor-pointer"
-                  />
+                  {item.isFavorite ? (
+                    <Icon
+                      icon="mdi:favorite"
+                      width="30"
+                      height="30"
+                      className="cursor-pointer text-tahiti"
+                      onClick={() => toggleFavorite && toggleFavorite(item.id)}
+                    />
+                  ) : (
+                    <Icon
+                      icon="mdi:favorite-border"
+                      width="30"
+                      height="30"
+                      className="cursor-pointer text-tahiti-favoriteIcon"
+                      onClick={() => toggleFavorite && toggleFavorite(item.id)}
+                    />
+                  )}
                 </div>
               </div>
             ))}
