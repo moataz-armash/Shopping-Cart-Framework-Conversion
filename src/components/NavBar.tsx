@@ -8,9 +8,12 @@ import { Icon } from "@iconify/react";
 import NavBarLink from "./NavBarLink";
 import logo from "../assets/images/14603825_5484736.jpg";
 import { useAuth } from "../hooks/authContext";
+import { useCart } from "../hooks/cartContext";
 
 export default function NavBar() {
   const { isAuthenticated, user, logout } = useAuth();
+  const { cart, increaseQuantity, decreaseQuantity, total, removeFromCart } =
+    useCart();
   const [open, setOpen] = useState(false);
   const [openCart, setOpenCart] = useState(false);
   const location = useLocation();
@@ -83,39 +86,49 @@ export default function NavBar() {
                     {openCart && (
                       <section className="absolute z-10 mb-5 mt-3 w-72 -translate-x-1/3 translate-y-5 rounded-md border-tahiti bg-tahiti shadow-lg">
                         <div className="container mt-4 pt-4">
-                          <div className="m-auto mb-3 flex w-[80%] items-center justify-between rounded-md bg-white p-2 shadow">
-                            {/* Product Name */}
-                            <span className="font-bold text-blue-600">
-                              lenevo
-                            </span>
+                          {cart.map((item) => (
+                            <div className="m-auto mb-3 flex w-[90%] items-center justify-between rounded-md bg-white p-2 shadow">
+                              {/* Product Name */}
+                              <span className="text-sm font-bold text-tahiti">
+                                {item.title}
+                              </span>
 
-                            {/* Quantity */}
-                            <span className="text-lg font-semibold">1</span>
+                              {/* Quantity */}
+                              <span className="text-xs font-bold text-tahiti">
+                                {item.quantity}
+                              </span>
 
-                            {/* Controls */}
-                            <div className="flex items-center space-x-4">
-                              <button
-                                // onClick={() => setQty(qty > 0 ? qty - 1 : 0)}
-                                className="text-xl font-bold text-red-500 hover:opacity-70"
-                              >
-                                -
-                              </button>
-                              <button
-                                // onClick={() => setQty(qty + 1)}
-                                className="text-xl font-bold text-green-600 hover:opacity-70"
-                              >
-                                +
-                              </button>
+                              {/* Controls */}
+                              <div className="flex items-center space-x-4">
+                                <button
+                                  onClick={() =>
+                                    decreaseQuantity &&
+                                    decreaseQuantity(item.id)
+                                  }
+                                  className="text-md font-bold text-red-500 hover:opacity-70"
+                                >
+                                  -
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    increaseQuantity &&
+                                    increaseQuantity(item.id)
+                                  }
+                                  className="text-md font-bold text-green-600 hover:opacity-70"
+                                >
+                                  +
+                                </button>
+                              </div>
                             </div>
-                          </div>
+                          ))}
                         </div>
 
-                        <div className="total d-flex m-auto mb-4 flex w-[80%] justify-between border-t border-solid border-white px-4 pt-2">
+                        <div className="total d-flex m-auto mb-4 flex w-[90%] justify-between border-t border-solid border-white px-4 pt-2">
                           <h5 className="totalTitle mr-3 font-bold text-white">
                             Total
                           </h5>
                           <div className="totalPrice mr-2 bg-white px-2 py-0.5 font-bold text-tahiti">
-                            30 EGP
+                            {total} EGP
                           </div>
                         </div>
                         <button className="w-full bg-white p-2 font-bold text-tahiti">
