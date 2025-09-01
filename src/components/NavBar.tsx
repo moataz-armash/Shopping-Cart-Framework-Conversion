@@ -7,17 +7,19 @@ import { Link, useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import NavBarLink from "./NavBarLink";
 import logo from "../assets/images/14603825_5484736.jpg";
+import logoProducts from "../assets/images/logo3.png";
 import { useAuth } from "../hooks/authContext";
 import { useCart } from "../hooks/cartContext";
 
 export default function NavBar() {
   const { isAuthenticated, user, logout } = useAuth();
-  const { cart, increaseQuantity, decreaseQuantity, total, removeFromCart } =
-    useCart();
+  const { cart, increaseQuantity, decreaseQuantity, total } = useCart();
   const [open, setOpen] = useState(false);
   const [openCart, setOpenCart] = useState(false);
   const location = useLocation();
   const userName = localStorage.getItem("userName") || user?.userName;
+
+  const pathName = location.pathname;
 
   const navigationRegister = [
     { label: "Sign In", path: "/login" },
@@ -30,7 +32,10 @@ export default function NavBar() {
   ];
 
   // Close mobile menu on route change
-  useEffect(() => setOpen(false), [location.pathname]);
+  useEffect(() => {
+    setOpen(false);
+    setOpenCart(false);
+  }, [location.pathname]);
 
   // Optional: prevent body scroll when menu is open (mobile)
   useEffect(() => {
@@ -48,13 +53,19 @@ export default function NavBar() {
     }
   };
 
+  const isProductsPage = pathName === "/products";
+
   return (
     <nav className="fixed inset-x-0 top-0 z-50 bg-tahiti text-white shadow-lg backdrop-blur-md">
       <div className="page max-w-5xl">
         <div className="flex items-center justify-between py-2">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} width={100} height={40} alt="Logo" />
+            {isProductsPage ? (
+              <img src={logoProducts} width={100} height={40} alt="Logo" />
+            ) : (
+              <img src={logo} width={100} height={40} alt="Logo" />
+            )}
           </Link>
 
           {/* Greeting (desktop) */}
@@ -83,7 +94,7 @@ export default function NavBar() {
                       height="30"
                       onClick={() => setOpenCart((v) => !v)}
                     />
-                    {openCart && (
+                    {openCart && !isProductsPage && (
                       <section className="absolute z-10 mb-5 mt-3 w-72 -translate-x-1/3 translate-y-5 rounded-md border-tahiti bg-tahiti shadow-lg">
                         <div className="container mt-4 pt-4">
                           {cart.map((item) => (
@@ -131,9 +142,12 @@ export default function NavBar() {
                             {total} EGP
                           </div>
                         </div>
-                        <button className="w-full bg-white p-2 font-bold text-tahiti">
+                        <Link
+                          className="block w-full bg-white p-2 text-center font-bold text-tahiti"
+                          to="/products"
+                        >
                           View All Products
-                        </button>
+                        </Link>
                       </section>
                     )}
                     {/* <NavBarLink to="/cart" icon="fluent:cart-24-regular" /> */}
@@ -196,7 +210,7 @@ export default function NavBar() {
               <>
                 {/* Cart (icon only) */}
                 <li onClick={() => setOpen(false)}>
-                  <NavBarLink to="/cart" icon="fluent:cart-24-regular" />
+                  <NavBarLink to="/products" icon="fluent:cart-24-regular" />
                 </li>
 
                 {/* Logout (button) */}

@@ -40,6 +40,7 @@ export default function App() {
             <Route path="/" element={<Pages.Home />} />
             <Route path="login" element={<Pages.Login />} />
             <Route path="register" element={<Pages.Register />} />
+            <Route path="products" element={<Pages.Products />} />
             <Route path="about" element={<Pages.About />} />
             <Route path="contact" element={<Pages.Contact />} />
             <Route path="policy" element={<Pages.Policy />} />
