@@ -29,7 +29,7 @@ export default function Home() {
 
   // Debounced search function
   const searchData = useCallback(
-    async (value) => {
+    async (value: any) => {
       if (!value.trim()) return;
 
       setIsLoading(true);
@@ -50,7 +50,7 @@ export default function Home() {
   );
 
   const handleSearchChange = useCallback(
-    (e) => {
+    (e: any) => {
       const value = e.target.value;
       setSearchValue(value);
       searchData(value);
@@ -59,7 +59,7 @@ export default function Home() {
   );
 
   const handleSearchOptionChange = useCallback(
-    (e) => {
+    (e: any) => {
       setSearchOption(e.target.value);
       // Re-trigger search if there's existing search value
       if (searchValue.trim()) {
@@ -70,7 +70,7 @@ export default function Home() {
   );
 
   const handleKeyDown = useCallback(
-    (e) => {
+    (e: any) => {
       if (e.key === "Enter") {
         e.preventDefault();
         searchData(searchValue);

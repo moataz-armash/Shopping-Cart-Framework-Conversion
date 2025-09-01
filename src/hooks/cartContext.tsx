@@ -26,7 +26,7 @@ interface CartContextType {
   decreaseQuantity?: (id: number) => void;
   toggleFavorite?: (id: number) => void;
   total?: number;
-  length?: number;
+  length: number;
   // removeFromCart: (id: string) => void;
   // addToFavorites: (item: CartItem) => void;
   // clearCart: () => void;
